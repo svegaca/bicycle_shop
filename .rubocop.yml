@@ -5,7 +5,14 @@ inherit_gem:
 
 require:
   - rubocop-rspec
+  - database_validations/rubocop/cops
 
 AllCops:
   TargetRubyVersion: 3.4
   NewCops: enable
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: no_space
