@@ -6,5 +6,5 @@ class Product < ApplicationRecord
   has_many :combination_rules, dependent: :destroy
 
   validates :name, presence: true
-  validates :base_price, numericality: { greater_than_or_equal_to: 0 }
+  validates :base_price, numericality: {greater_than_or_equal_to: 0}
 end
