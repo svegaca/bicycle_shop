@@ -2,13 +2,13 @@ require 'rails_helper'
 
 RSpec.describe ProductOptionValue, type: :model do
   describe 'associations' do
-    it { is_expected.to belong_to(:product) }
+    it { is_expected.to belong_to(:product_option_type) }
     it { is_expected.to belong_to(:option_value) }
   end
 
   describe 'validations' do
     it { is_expected.to validate_inclusion_of(:availability_type).in_array(described_class.availability_types.keys) }
-    it { is_expected.to validate_db_uniqueness_of(:option_value_id).scoped_to(:product_id) }
+    it { is_expected.to validate_db_uniqueness_of(:option_value_id).scoped_to(:product_option_type_id) }
 
     describe 'stock' do
       it { is_expected.not_to validate_numericality_of(:stock).only_integer }

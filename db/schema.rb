@@ -75,15 +75,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_141506) do
   end
 
   create_table "product_option_values", force: :cascade do |t|
-    t.bigint "product_id", null: false
+    t.bigint "product_option_type_id", null: false
     t.bigint "option_value_id", null: false
     t.string "availability_type", null: false
     t.integer "stock"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["option_value_id"], name: "index_product_option_values_on_option_value_id"
-    t.index ["product_id", "option_value_id"], name: "index_product_option_values_on_product_id_and_option_value_id", unique: true
-    t.index ["product_id"], name: "index_product_option_values_on_product_id"
+    t.index ["product_option_type_id", "option_value_id"], name: "idx_on_product_option_type_id_option_value_id_022759a357", unique: true
+    t.index ["product_option_type_id"], name: "index_product_option_values_on_product_option_type_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -101,5 +101,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_141506) do
   add_foreign_key "product_option_types", "option_types"
   add_foreign_key "product_option_types", "products"
   add_foreign_key "product_option_values", "option_values"
-  add_foreign_key "product_option_values", "products"
+  add_foreign_key "product_option_values", "product_option_types"
 end

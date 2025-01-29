@@ -3,9 +3,8 @@ ActiveAdmin.register OptionType do
 
   filter :name
   filter :description
-  filter :option_values_name, as: :string#, label: 'Nombre de Option Value'
+  filter :option_values_name, as: :string
 
-  # Index Page
   index do
     selectable_column
     id_column
@@ -17,7 +16,6 @@ ActiveAdmin.register OptionType do
     actions
   end
 
-  # Show Page
   show do
     attributes_table do
       row :id
@@ -35,7 +33,6 @@ ActiveAdmin.register OptionType do
     end
   end
 
-  # Form Page
   form do |f|
     f.semantic_errors
 

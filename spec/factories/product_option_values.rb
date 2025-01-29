@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :product_option_value do
-    association :product
+    association :product_option_type
     association :option_value
     availability_type { :always_in_stock }
     stock { Faker::Number.between(from: 4, to: 20) if stock_controlled? }

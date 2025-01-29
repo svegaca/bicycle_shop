@@ -1,13 +1,3 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ['Action', 'Comedy', 'Drama', 'Horror'].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-
 puts 'Clearing existing data...'
 
 CombinationRuleValue.destroy_all
@@ -28,47 +18,34 @@ full_susp  = OptionValue.create!(option_type: frame_type, name: 'Full-Suspension
 diamond    = OptionValue.create!(option_type: frame_type, name: 'Diamond')
 
 finish_type = OptionType.create!(name: 'Finish', description: 'Paint finish options')
-matte       = OptionValue.create!(option_type: finish_type, name: 'Matte')
-shiny       = OptionValue.create!(option_type: finish_type, name: 'Shiny')
+OptionValue.create!(option_type: finish_type, name: 'Matte')
+shiny = OptionValue.create!(option_type: finish_type, name: 'Shiny')
 
 wheel_type  = OptionType.create!(name: 'Wheels', description: 'Different wheel sets')
-road_wheels = OptionValue.create!(option_type: wheel_type, name: 'Road Wheels')
-mountain_wheels = OptionValue.create!(option_type: wheel_type, name: 'Mountain Wheels')
+OptionValue.create!(option_type: wheel_type, name: 'Road Wheels')
+OptionValue.create!(option_type: wheel_type, name: 'Mountain Wheels')
 
 basket_type = OptionType.create!(name: 'Basket', description: 'Different types of baskets for the bike')
-basket_none  = OptionValue.create!(option_type: basket_type, name: 'None')
-basket_wood  = OptionValue.create!(option_type: basket_type, name: 'Wood')
-basket_white = OptionValue.create!(option_type: basket_type, name: 'White')
+OptionValue.create!(option_type: basket_type, name: 'None')
+OptionValue.create!(option_type: basket_type, name: 'Wood')
+OptionValue.create!(option_type: basket_type, name: 'White')
 
-puts 'Linking option types to products...'
+puts 'Linking option types and values to products...'
 [basic_bike, mountain_bike].each do |product|
-  [frame_type, finish_type, wheel_type].each do |type|
-    ProductOptionType.create!(product: product, option_type: type)
-  end
-end
-ProductOptionType.create!(product: basic_bike, option_type: basket_type) # Only the basic bike has basket
+  [frame_type, finish_type, wheel_type, basket_type].each do |type|
+    next if type == basket_type && product != basic_bike # Only the basic bike has basket
 
-puts 'Linking option values to products (with stock + availability)...'
-[basic_bike, mountain_bike].each do |product|
-  [full_susp, diamond, matte, shiny, road_wheels, mountain_wheels].each do |ov|
-    availability_type = ProductOptionValue.availability_types.keys.sample
-    ProductOptionValue.create!(
-      product:,
-      option_value: ov,
-      availability_type:,
-      stock: (rand(0..5) if availability_type == 'stock_controlled')
-    )
+    product_option_type = ProductOptionType.create!(product: product, option_type: type)
+    type.option_values.each do |ov|
+      availability_type = ProductOptionValue.availability_types.keys.sample
+      ProductOptionValue.create!(
+        product_option_type:,
+        option_value: ov,
+        availability_type:,
+        stock: (rand(0..5) if availability_type == 'stock_controlled')
+      )
+    end
   end
-end
-
-[basket_none, basket_wood, basket_white].each do |ov| # Only the basic bike has basket
-  availability_type = ProductOptionValue.availability_types.keys.sample
-  ProductOptionValue.create!(
-    product: basic_bike,
-    option_value: ov,
-    availability_type:,
-    stock: (rand(0..5) if availability_type == 'stock_controlled')
-  )
 end
 
 puts 'Creating combination rules...'
