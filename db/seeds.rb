@@ -9,41 +9,38 @@ OptionType.destroy_all
 Product.destroy_all
 
 puts 'Creating products...'
-basic_bike = Product.create!(name: 'Basic Bike', description: 'Just a standard bicycle', base_price: 100)
-mountain_bike = Product.create!(name: 'Mountain Bike', description: 'An off-road bike with extra features', base_price: 250)
+basic_bike = Product.create!(name: 'Basic Bike', description: 'Just a standard bicycle')
+mountain_bike = Product.create!(name: 'Mountain Bike', description: 'An off-road bike with extra features')
 
 puts 'Creating option types + values...'
 frame_type = OptionType.create!(name: 'Frame', description: 'Different frame styles')
-full_susp  = OptionValue.create!(option_type: frame_type, name: 'Full-Suspension')
-diamond    = OptionValue.create!(option_type: frame_type, name: 'Diamond')
+full_susp  = OptionValue.create!(option_type: frame_type, name: 'Full-Suspension', base_price: '349.99', availability_type: 'stock_controlled', stock: 5)
+diamond    = OptionValue.create!(option_type: frame_type, name: 'Diamond', base_price: '299.99', availability_type: 'stock_controlled', stock: 6)
+OptionValue.create!(option_type: frame_type, name: 'Carbon', base_price: '359.99', availability_type: 'stock_controlled', stock: 2)
 
 finish_type = OptionType.create!(name: 'Finish', description: 'Paint finish options')
-OptionValue.create!(option_type: finish_type, name: 'Matte')
-shiny = OptionValue.create!(option_type: finish_type, name: 'Shiny')
+OptionValue.create!(option_type: finish_type, name: 'Matte', base_price: '27.50', availability_type: 'always_in_stock')
+shiny = OptionValue.create!(option_type: finish_type, name: 'Shiny', base_price: '29', availability_type: 'always_in_stock')
 
 wheel_type  = OptionType.create!(name: 'Wheels', description: 'Different wheel sets')
-OptionValue.create!(option_type: wheel_type, name: 'Road Wheels')
-OptionValue.create!(option_type: wheel_type, name: 'Mountain Wheels')
+OptionValue.create!(option_type: wheel_type, name: 'Road Wheels', base_price: '72', availability_type: 'stock_controlled', stock: 4)
+OptionValue.create!(option_type: wheel_type, name: 'Mountain Wheels', base_price: '89', availability_type: 'stock_controlled', stock: 3)
 
 basket_type = OptionType.create!(name: 'Basket', description: 'Different types of baskets for the bike')
-OptionValue.create!(option_type: basket_type, name: 'None')
-OptionValue.create!(option_type: basket_type, name: 'Wood')
-OptionValue.create!(option_type: basket_type, name: 'White')
+OptionValue.create!(option_type: basket_type, name: 'None', base_price: '0', availability_type: 'always_in_stock')
+OptionValue.create!(option_type: basket_type, name: 'Wood', base_price: '19', availability_type: 'stock_controlled', stock: 2)
+OptionValue.create!(option_type: basket_type, name: 'White', base_price: '15', availability_type: 'stock_controlled', stock: 8)
 
 puts 'Linking option types and values to products...'
 [basic_bike, mountain_bike].each do |product|
-  [frame_type, finish_type, wheel_type, basket_type].each do |type|
-    next if type == basket_type && product != basic_bike # Only the basic bike has basket
+  [frame_type, finish_type, wheel_type, basket_type].each do |option_type|
+    next if option_type == basket_type && product == mountain_bike # The mountain bike can not include a basket
 
-    product_option_type = ProductOptionType.create!(product: product, option_type: type)
-    type.option_values.each do |ov|
-      availability_type = ProductOptionValue.availability_types.keys.sample
-      ProductOptionValue.create!(
-        product_option_type:,
-        option_value: ov,
-        availability_type:,
-        stock: (rand(0..5) if availability_type == 'stock_controlled')
-      )
+    product_option_type = ProductOptionType.create!(product:, option_type:)
+    option_type.option_values.each do |option_value|
+      next if option_value == full_susp && product == basic_bike # The basic bike can not mount Full-Suspension frame
+
+      ProductOptionValue.create!(product_option_type:, option_value:)
     end
   end
 end

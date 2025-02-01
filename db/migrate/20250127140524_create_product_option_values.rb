@@ -3,8 +3,6 @@ class CreateProductOptionValues < ActiveRecord::Migration[8.0]
     create_table :product_option_values do |t|
       t.references :product_option_type, null: false, foreign_key: true
       t.references :option_value, null: false, foreign_key: true
-      t.string :availability_type, null: false
-      t.integer :stock
 
       t.timestamps
     end

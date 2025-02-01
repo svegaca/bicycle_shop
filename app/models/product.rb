@@ -8,7 +8,6 @@ class Product < ApplicationRecord
   accepts_nested_attributes_for :combination_rules, allow_destroy: true, reject_if: :all_blank
 
   validates :name, presence: true
-  validates :base_price, numericality: {greater_than_or_equal_to: 0}
 
   # Ransack configuration:
   def self.ransackable_associations(auth_object = nil)
