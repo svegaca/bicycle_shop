@@ -52,7 +52,6 @@ ActiveAdmin.register OptionType do
       ov.input :name
       ov.input :description
       ov.input :base_price
-      ov.input :availability_type
       ov.input :availability_type, as: :select, collection: OptionValue.availability_types.keys.map { |k| [k.humanize, k] }, prompt: 'Select Availability Type'
       ov.input :stock
     end
