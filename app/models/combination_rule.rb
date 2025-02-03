@@ -1,5 +1,5 @@
 class CombinationRule < ApplicationRecord
- belongs_to :product
+  db_belongs_to :product
 
   has_many :combination_rule_values, dependent: :destroy
   has_many :option_values, through: :combination_rule_values

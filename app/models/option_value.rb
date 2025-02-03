@@ -1,7 +1,6 @@
 class OptionValue < ApplicationRecord
-  belongs_to :option_type
+  db_belongs_to :option_type
   has_many :product_option_values, dependent: :restrict_with_error
-  has_many :products, through: :product_option_values
 
   enum :availability_type, %i[always_in_stock out_of_stock stock_controlled].index_with(&:to_s), validate: true
 
@@ -14,14 +13,6 @@ class OptionValue < ApplicationRecord
     return false if out_of_stock?
 
     stock.positive?
-  end
-
-  def availability_details # TODO: remove this from the model
-    [
-      # TODO: print also the base price
-      availability_type.humanize,
-      (stock if stock_controlled?)
-    ].compact.join(': ')
   end
 
   # Ransack configuration:

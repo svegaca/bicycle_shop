@@ -3,8 +3,7 @@ require 'rails_helper'
 RSpec.describe OptionValue, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:option_type) }
-    it { is_expected.to have_many(:option_values).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:products).through(:option_values) }
+    it { is_expected.to have_many(:product_option_values).dependent(:restrict_with_error) }
   end
 
   describe 'validations' do

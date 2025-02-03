@@ -9,6 +9,6 @@ RSpec.describe ProductOptionType, type: :model do
   end
 
   describe 'validations' do
-    it { is_expected.to validate_db_uniqueness_of(:option_type_id).scoped_to(:product_option_type_id) }
+    it { is_expected.to validate_db_uniqueness_of(:option_type_id).scoped_to(:product_id) }
   end
 end

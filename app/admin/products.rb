@@ -1,9 +1,9 @@
 ActiveAdmin.register Product do
-  permit_params :name, :description, :base_price,
+  permit_params :name, :description,
                 product_option_types_attributes: [
                   :id, :option_type_id, :_destroy,
                   product_option_values_attributes: [
-                    :id, :option_value_id, :availability_type, :stock, :_destroy
+                    :id, :option_value_id, :_destroy
                   ]
                 ],
                 combination_rules_attributes: [
@@ -21,9 +21,6 @@ ActiveAdmin.register Product do
     id_column
     column :name
     column :description
-    column :base_price do |product|
-      number_to_currency(product.base_price, unit: '€')
-    end
     column 'Option Types' do |product|
       product.option_types.map(&:name).to_sentence
     end
@@ -35,9 +32,6 @@ ActiveAdmin.register Product do
       row :id
       row :name
       row :description
-      row :base_price do |product|
-        number_to_currency(product.base_price, unit: '€')
-      end
       row :created_at
       row :updated_at
     end
@@ -48,7 +42,7 @@ ActiveAdmin.register Product do
           pot.option_type.name
         end
         column 'Option Values' do |pot|
-          pot.product_option_values.map { |pov| "#{pov.option_value.name} (#{pov.availability_details})" }.to_sentence
+          pot.product_option_values.map { |pov| pov.option_value.name }.to_sentence
         end
       end
     end
@@ -79,7 +73,6 @@ ActiveAdmin.register Product do
     f.inputs 'Product Details' do
       f.input :name
       f.input :description
-      f.input :base_price
     end
 
     f.has_many :product_option_types, allow_destroy: true, new_record: true, heading: 'Option Types' do |pot_form|
@@ -87,8 +80,6 @@ ActiveAdmin.register Product do
 
       pot_form.has_many :product_option_values, allow_destroy: true, new_record: true, heading: 'Option Values' do |pov_form|
         pov_form.input :option_value, as: :select, collection: OptionValue.all.pluck(:name, :id), prompt: 'Select Option Value'
-        pov_form.input :availability_type, as: :select, collection: ProductOptionValue.availability_types.keys.map { |k| [k.humanize, k] }, prompt: 'Select Availability Type'
-        pov_form.input :stock
       end
     end
 
